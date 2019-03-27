@@ -4,11 +4,21 @@ import Select from 'react-select';
 import { RadioGroup, Radio } from 'react-radio-group';
 import CheckBox from './CheckboxList/Checkbox';
 import logo from '../../../assets/favicon.ico'
+import ItemsTable from '../../ItemsTable/ItemsTable';
 import { validateProductName, validateProductCode, validateVatStake, validateNettoPrice } from './validators';
 import { nettoHandler, bruttoHandler } from './helpers';
 
 function ColCenter() {
-    const [selectedValue, setSelectedValue] = useState('1');
+    const colourOptions = [
+        { value: 'Narzędzia', label: 'Narzędzia' },
+        { value: 'Słodycze', label: 'Słodycze' },
+        { value: 'Rozrywka', label: 'Rozrywka' }
+    ];
+
+    const [radioValue, setRadioValue] = useState('1');
+    const [category, setCategory] = useState(colourOptions[0]);
+    const [productName, setProductName] = useState('');
+    const [productId, setProductId] = useState('');
     const [isFirstChecboxChecked, setisFirstChecboxChecked] = useState(false);
     const [isSecondChecboxChecked, setisSecondChecboxChecked] = useState(false);
     const [isThirdChecboxChecked, setisThirdChecboxChecked] = useState(false);
@@ -19,6 +29,7 @@ function ColCenter() {
     const [bruttoValue, setBruttoValue] = useState('');
     const [itemOptionsCount, setItemOptionsCount] = useState(0);
     const [disabledNext, setDisabledNext] = useState(true);
+    const [tableItems, setTableItems] = useState([]);
 
     // VALIDATIONS
     const [nameValid, setNameValid] = useState(false);
@@ -35,19 +46,38 @@ function ColCenter() {
         }
       });
 
-    const colourOptions = [
-        { value: 'Narzędzia', label: 'Narzędzia' },
-        { value: 'Słodycze', label: 'Słodycze' },
-        { value: 'Rozrywka', label: 'Rozrywka' }
-    ];
+    // const items = [
+    //     {
+    //         productName: 1,
+    //         productId: 2,
+    //         nettoValue: 3,
+    //         vatValue: 4,
+    //         bruttoValue: 5,
+    //         category: 6,
+    //         itemOptions: 7,
+    //         itemRating: 8,
+    //         itemIcon: 9,
+    //     },
+    //     {
+    //         productName: 1,
+    //         productId: 2,
+    //         nettoValue: 3,
+    //         vatValue: 4,
+    //         bruttoValue: 5,
+    //         category: 6,
+    //         itemOptions: 7,
+    //         itemRating: 8,
+    //         itemIcon: 9,
+    //     }
+    // ];
 
     return (
         <div className="col-12 col-sm-6 col-md-8">
             <div className="col-md-8 order-md-1">
                 <h4 className="mb-3">Dodaj produkt</h4>
-                <form className="needs-validation" noValidate>
-                    <InputRegular label={'Nazwa produktu'} defaultValue={'masło'} invalidMessage={'tylko litery, max długość 10 znaków, pole obowiązkowe'} validator={validateProductName} setGlobalValid={setNameValid} onBlur={() => {}} />
-                    <InputRegular label={'Kod towaru'} invalidMessage={'format XX-XX cyfry i litery (bez znaków specjalnych), pole obowiązkowe'} validator={validateProductCode} setGlobalValid={setProductIdValid} onBlur={() => {}} />
+                <form className="needs-validation" noValidate >
+                    <InputRegular label={'Nazwa produktu'} defaultValue={'masło'} invalidMessage={'tylko litery, max długość 10 znaków, pole obowiązkowe'} validator={validateProductName} setGlobalValid={setNameValid} onBlur={(event) => setProductName(event.target.value)} />
+                    <InputRegular label={'Kod towaru'} invalidMessage={'format XX-XX cyfry i litery (bez znaków specjalnych), pole obowiązkowe'} validator={validateProductCode} setGlobalValid={setProductIdValid} onBlur={(event) => setProductId(event.target.value)} />
                     <InputRegular label={'Cena netto'} value={nettoValue} invalidMessage={'Niepoprawna wartość'} validator={validateNettoPrice} setGlobalValid={seNettoAmountValid} onChange={(event) => {setNettoValue(event.target.value)}} onBlur={(event => nettoHandler(event.target.value, setNettoValue))} />
                     <InputRegular label={'Stawka VAT'} defaultValue={vatValue} invalidMessage={'tylko cyfry, pole obowiązkowe'} validator={validateVatStake} onBlur={(event => {setVatValue(event.target.value)})} />
                     <InputRegular label={'Cena brutto'} disabled={true} value={bruttoValue} />
@@ -60,7 +90,7 @@ function ColCenter() {
                             defaultValue={colourOptions[0]}
                             isClearable={false}
                             name="color"
-                            onChange={(event => {console.log('SELECT', event)})}
+                            onChange={(event => {console.log('SELECT', event); setCategory(event.value)})}
                             options={colourOptions}
                         />
                     </div>
@@ -77,7 +107,7 @@ function ColCenter() {
                     }
             
 
-                    <RadioGroup className="mb-3" name="fruit" selectedValue={selectedValue} onChange={(value , event) => {console.log('Radio', value, event); setSelectedValue(value)}}>
+                    <RadioGroup className="mb-3" name="fruit" selectedValue={radioValue} onChange={(value , event) => {console.log('Radio', value); setRadioValue(value)}}>
                         Ocena towaru
                         <div className="d-block my-3">
                             <div className="form-check form-check-inline">
@@ -104,9 +134,26 @@ function ColCenter() {
                     </RadioGroup>
                     <img src={logo} alt="Product"/>
                     <hr className="mb-4" />
-                    <button disabled={disabledNext} className="btn btn-primary btn-lg btn-block" type="submit">Dodaj</button>
+                    <button disabled={disabledNext} className="btn btn-primary btn-lg btn-block" type="submit"
+                    onClick={(event) => {
+                        event.preventDefault()
+                        const newItem = {
+                            productName: productName,
+                            productId: productId,
+                            nettoValue: nettoValue,
+                            vatValue: vatValue,
+                            bruttoValue: bruttoValue,
+                            category: category,
+                            itemOptions: itemOptionsCount,
+                            itemRating: radioValue,
+                            itemIcon: 1,
+                        };
+                        const newItems = tableItems.concat([newItem]);
+                        setTableItems(newItems);
+                    }}>Dodaj</button>
                 </form>
             </div>
+            <ItemsTable items={tableItems}/>
         </div>
     );
 }
