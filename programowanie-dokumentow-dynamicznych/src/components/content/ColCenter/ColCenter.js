@@ -17,6 +17,7 @@ function ColCenter() {
     const [nettoValue, setNettoValue] = useState('');
     const [vatValue, setVatValue] = useState('');
     const [bruttoValue, setBruttoValue] = useState('');
+    const [itemOptionsCount, setItemOptionsCount] = useState(0);
 
     useEffect(() => {
         if((nettoValue !== '') && (vatValue !== '')) {
@@ -55,12 +56,13 @@ function ColCenter() {
                     </div>
                         <div className = "mb-3">Opcja towaru</div>
                     <ul className="mb-3 list-nopadding">
-                        <CheckBox id={1} value={"Pierwsza opcja towaru."} isChecked={isFirstChecboxChecked} handleCheckChieldElement={() => setisFirstChecboxChecked(!isFirstChecboxChecked)}/>
-                        <CheckBox id={2} value={"Druga opcja towaru."} isChecked={isSecondChecboxChecked} handleCheckChieldElement={() => setisSecondChecboxChecked(!isSecondChecboxChecked)}/>
-                        <CheckBox id={3} value={"Trzecia opcja towaru."} isChecked={isThirdChecboxChecked} handleCheckChieldElement={() => setisThirdChecboxChecked(!isThirdChecboxChecked)}/>
-                        <CheckBox id={4} value={"Czwarta opcja towaru."} isChecked={isFourthChecboxChecked} handleCheckChieldElement={() => setisFourthChecboxChecked(!isFourthChecboxChecked)} />
-                        <CheckBox id={5} value={"Piata opcja towaru."} isChecked={isFifthChecboxChecked} handleCheckChieldElement={() => setisFifthChecboxChecked(!isFifthChecboxChecked)}/>
+                        <CheckBox id={1} value={"Pierwsza opcja towaru."} isChecked={isFirstChecboxChecked} handleCheckChieldElement={() => {setItemOptionsCount(isFirstChecboxChecked ? itemOptionsCount - 1 : itemOptionsCount + 1); setisFirstChecboxChecked(!isFirstChecboxChecked)}}/>
+                        <CheckBox id={2} value={"Druga opcja towaru."} isChecked={isSecondChecboxChecked} handleCheckChieldElement={() => {setItemOptionsCount(isSecondChecboxChecked ? itemOptionsCount - 1 : itemOptionsCount + 1); setisSecondChecboxChecked(!isSecondChecboxChecked)}}/>
+                        <CheckBox id={3} value={"Trzecia opcja towaru."} isChecked={isThirdChecboxChecked} handleCheckChieldElement={() => {setItemOptionsCount(isThirdChecboxChecked ? itemOptionsCount - 1 : itemOptionsCount + 1); setisThirdChecboxChecked(!isThirdChecboxChecked)}}/>
+                        <CheckBox id={4} value={"Czwarta opcja towaru."} isChecked={isFourthChecboxChecked} handleCheckChieldElement={() => {setItemOptionsCount(isFourthChecboxChecked ? itemOptionsCount - 1 : itemOptionsCount + 1); setisFourthChecboxChecked(!isFourthChecboxChecked)}} />
+                        <CheckBox id={5} value={"Piata opcja towaru."} isChecked={isFifthChecboxChecked} handleCheckChieldElement={() => {setItemOptionsCount(isFifthChecboxChecked ? itemOptionsCount - 1 : itemOptionsCount + 1); setisFifthChecboxChecked(!isFifthChecboxChecked)}}/>
                     </ul>
+                    {<div>Invalid</div>}
             
 
                     <RadioGroup className="mb-3" name="fruit" selectedValue={selectedValue} onChange={(value , event) => {console.log('Radio', value, event); setSelectedValue(value)}}>
