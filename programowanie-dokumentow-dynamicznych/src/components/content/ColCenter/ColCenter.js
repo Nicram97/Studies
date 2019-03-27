@@ -4,9 +4,15 @@ import Select from 'react-select';
 import { RadioGroup, Radio } from 'react-radio-group';
 import CheckBox from './CheckboxList/Checkbox';
 import logo from '../../../assets/favicon.ico'
+import { validateProductName, validateProductCode } from './validators';
 
 function ColCenter() {
     const [selectedValue, setSelectedValue] = useState('apple');
+    const [isFirstChecboxChecked, setisFirstChecboxChecked] = useState(false);
+    const [isSecondChecboxChecked, setisSecondChecboxChecked] = useState(false);
+    const [isThirdChecboxChecked, setisThirdChecboxChecked] = useState(false);
+    const [isFourthChecboxChecked, setisFourthChecboxChecked] = useState(false);
+    const [isFifthChecboxChecked, setisFifthChecboxChecked] = useState(false);
 
     const colourOptions = [
         { value: 'Narzędzia', label: 'Narzędzia' },
@@ -19,8 +25,8 @@ function ColCenter() {
             <div className="col-md-8 order-md-1">
                 <h4 className="mb-3">Dodaj produkt</h4>
                 <form className="needs-validation" noValidate>
-                    <InputRegular label={'Nazwa produktu'} defaultValue={'masło margaryna'} onBlur={(event => { console.log('SIEMA', event) })} />
-                    <InputRegular label={'Kod towaru'} onBlur={(event => { console.log('Kod towaru', event) })} />
+                    <InputRegular label={'Nazwa produktu'} defaultValue={'masło margaryna'} invalidMessage={'tylko litery, max długość 10 znaków, pole obowiązkowe'} validator={validateProductName} onBlur={(event => { console.log(event) })} />
+                    <InputRegular label={'Kod towaru'} invalidMessage={'format XX-XX cyfry i litery (bez znaków specjalnych), pole obowiązkowe'} validator={validateProductCode} onBlur={(event => { console.log('Kod towaru', event) })} />
                     <InputRegular label={'Cena netto'} onBlur={(event => { console.log('Cena netto', event) })} />
                     <InputRegular label={'Stawka VAT'} defaultValue={'jest za duża :('} onBlur={(event => { console.log('Stawka VAT', event) })} />
                     <InputRegular label={'Cena brutto'} onBlur={(event => { console.log('Cena brutto', event) })} />
@@ -39,11 +45,11 @@ function ColCenter() {
                     </div>
                         <div className = "mb-3">Opcja towaru</div>
                     <ul className="mb-3 list-nopadding">
-                        <CheckBox id={1} value={"Pierwsza opcja towaru."} isChecked={false} />
-                        <CheckBox id={2} value={"Druga opcja towaru."} isChecked={false} />
-                        <CheckBox id={3} value={"Trzecia opcja towaru."} isChecked={false} />
-                        <CheckBox id={4} value={"Czwarta opcja towaru."} isChecked={false} />
-                        <CheckBox id={5} value={"Piata opcja towaru."} isChecked={false} />
+                        <CheckBox id={1} value={"Pierwsza opcja towaru."} isChecked={isFirstChecboxChecked} handleCheckChieldElement={() => setisFirstChecboxChecked(!isFirstChecboxChecked)}/>
+                        <CheckBox id={2} value={"Druga opcja towaru."} isChecked={isSecondChecboxChecked} handleCheckChieldElement={() => setisSecondChecboxChecked(!isSecondChecboxChecked)}/>
+                        <CheckBox id={3} value={"Trzecia opcja towaru."} isChecked={isThirdChecboxChecked} handleCheckChieldElement={() => setisThirdChecboxChecked(!isThirdChecboxChecked)}/>
+                        <CheckBox id={4} value={"Czwarta opcja towaru."} isChecked={isFourthChecboxChecked} handleCheckChieldElement={() => setisFourthChecboxChecked(!isFourthChecboxChecked)} />
+                        <CheckBox id={5} value={"Piata opcja towaru."} isChecked={isFifthChecboxChecked} handleCheckChieldElement={() => setisFifthChecboxChecked(!isFifthChecboxChecked)}/>
                     </ul>
             
 
