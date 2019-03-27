@@ -10,18 +10,22 @@ export function validateProductName(inputValue, setGlobalValid) {
     }
 };
 
-export function validateProductCode(inputValue) {
+export function validateProductCode(inputValue, setGlobalValid) {
     if(inputValue.match(itemCodeRegex) === null) {
+        setGlobalValid(false);
         return false;
     } else {
+        setGlobalValid(true);
         return true;
     }
 }
 
-export function validateNettoPrice(inputValue) {
+export function validateNettoPrice(inputValue, setGlobalValid) {
     if(inputValue.match(itemNettoPriceRegex) === null) {
+        setGlobalValid(false);
         return false;
     } else {
+        setGlobalValid(true);
         return true;
     }
 }

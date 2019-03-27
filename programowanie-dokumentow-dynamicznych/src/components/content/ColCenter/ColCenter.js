@@ -15,7 +15,7 @@ function ColCenter() {
     const [isFourthChecboxChecked, setisFourthChecboxChecked] = useState(false);
     const [isFifthChecboxChecked, setisFifthChecboxChecked] = useState(false);
     const [nettoValue, setNettoValue] = useState('');
-    const [vatValue, setVatValue] = useState('');
+    const [vatValue, setVatValue] = useState(23);
     const [bruttoValue, setBruttoValue] = useState('');
     const [itemOptionsCount, setItemOptionsCount] = useState(0);
     const [disabledNext, setDisabledNext] = useState(true);
@@ -29,17 +29,10 @@ function ColCenter() {
         if((nettoValue !== '') && (vatValue !== '')) {
             setBruttoValue(bruttoHandler(nettoValue, vatValue));
         }
-        let result = true;
 
-        // Object.keys(globalValidation).forEach(function(key, index) {
-        //     console.log(globalValidation[key]);
-        //     if(globalValidation[key] === false) {
-        //        result = false; 
-        //     }
-        // });
-        // if(result === true) {
-        //     setDisabledNext(false);
-        // }
+        if((nameValid && productIdValid && nettoAmountValid && itemOptionsCount >= 2)) {
+            setDisabledNext(false);
+        }
       });
 
     const colourOptions = [
@@ -54,9 +47,9 @@ function ColCenter() {
                 <h4 className="mb-3">Dodaj produkt</h4>
                 <form className="needs-validation" noValidate>
                     <InputRegular label={'Nazwa produktu'} defaultValue={'masło'} invalidMessage={'tylko litery, max długość 10 znaków, pole obowiązkowe'} validator={validateProductName} setGlobalValid={setNameValid} onBlur={() => {}} />
-                    <InputRegular label={'Kod towaru'} invalidMessage={'format XX-XX cyfry i litery (bez znaków specjalnych), pole obowiązkowe'} validator={validateProductCode} onBlur={() => {}} />
-                    <InputRegular label={'Cena netto'} value={nettoValue} invalidMessage={'Niepoprawna wartość'} validator={validateNettoPrice} onChange={(event) => {setNettoValue(event.target.value)}} onBlur={(event => nettoHandler(event.target.value, setNettoValue))} />
-                    <InputRegular label={'Stawka VAT'} defaultValue={23} invalidMessage={'tylko cyfry, pole obowiązkowe'} validator={validateVatStake} onBlur={(event => {setVatValue(event.target.value)})} />
+                    <InputRegular label={'Kod towaru'} invalidMessage={'format XX-XX cyfry i litery (bez znaków specjalnych), pole obowiązkowe'} validator={validateProductCode} setGlobalValid={setProductIdValid} onBlur={() => {}} />
+                    <InputRegular label={'Cena netto'} value={nettoValue} invalidMessage={'Niepoprawna wartość'} validator={validateNettoPrice} setGlobalValid={seNettoAmountValid} onChange={(event) => {setNettoValue(event.target.value)}} onBlur={(event => nettoHandler(event.target.value, setNettoValue))} />
+                    <InputRegular label={'Stawka VAT'} defaultValue={vatValue} invalidMessage={'tylko cyfry, pole obowiązkowe'} validator={validateVatStake} onBlur={(event => {setVatValue(event.target.value)})} />
                     <InputRegular label={'Cena brutto'} disabled={true} value={bruttoValue} />
                     
                     <div className="mb-3">
