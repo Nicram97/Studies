@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import InputRegular from './inputs/InputRegular'
 import Select from 'react-select';
 import { RadioGroup, Radio } from 'react-radio-group';
+import CheckBox from './CheckboxList/Checkbox';
+import logo from '../../../assets/favicon.ico'
 
 function ColCenter() {
     const [selectedValue, setSelectedValue] = useState('apple');
@@ -11,6 +13,7 @@ function ColCenter() {
         { value: 'Słodycze', label: 'Słodycze' },
         { value: 'Rozrywka', label: 'Rozrywka' }
     ];
+
     return (
         <div className="col-12 col-sm-6 col-md-8">
             <div className="col-md-8 order-md-1">
@@ -34,70 +37,44 @@ function ColCenter() {
                             options={colourOptions}
                         />
                     </div>
+                        <div className = "mb-3">Opcja towaru</div>
+                    <ul className="mb-3 list-nopadding">
+                        <CheckBox id={1} value={"Pierwsza opcja towaru."} isChecked={false} />
+                        <CheckBox id={2} value={"Druga opcja towaru."} isChecked={false} />
+                        <CheckBox id={3} value={"Trzecia opcja towaru."} isChecked={false} />
+                        <CheckBox id={4} value={"Czwarta opcja towaru."} isChecked={false} />
+                        <CheckBox id={5} value={"Piata opcja towaru."} isChecked={false} />
+                    </ul>
+            
 
-                    <RadioGroup name="fruit" selectedValue={selectedValue} onChange={(value , event) => {console.log('Radio', value, event); setSelectedValue(value)}}>
-                        <Radio value="apple" />Apple
-                        <Radio value="orange" />Orange
-                        <Radio value="watermelon" />Watermelon
-                    </RadioGroup>
-
-                    <div className="mb-3">
-                        <label for="opcjaTowar">Opcja towaru</label>
-                        <div className="custom-control custom-checkbox">
-                            <input type="checkbox" className="custom-control-input" id="opcja1" />
-                            <label className="custom-control-label" for="opcja1">Pierwsza opcja towaru.</label>
-                        </div>
-                        <div className="custom-control custom-checkbox">
-                            <input type="checkbox" className="custom-control-input" id="opcja2" />
-                            <label className="custom-control-label" for="opcja2">Druga opcja towaru.</label>
-                        </div>
-                        <div className="custom-control custom-checkbox">
-                            <input type="checkbox" className="custom-control-input" id="opcja3" />
-                            <label className="custom-control-label" for="opcja3">Trzecia opcja towaru.</label>
-                        </div>
-                        <div className="custom-control custom-checkbox">
-                            <input type="checkbox" className="custom-control-input" id="opcja4" />
-                            <label className="custom-control-label" for="opcja4">Czwarta opcja towaru.</label>
-                        </div>
-                        <div className="custom-control custom-checkbox">
-                            <input type="checkbox" className="custom-control-input" id="opcja5" />
-                            <label className="custom-control-label" for="opcja5">Piata opcja towaru.</label>
-                        </div>
-                    </div>
-
-
-                    <div className="mb-3">
+                    <RadioGroup className="mb-3" name="fruit" selectedValue={selectedValue} onChange={(value , event) => {console.log('Radio', value, event); setSelectedValue(value)}}>
                         Ocena towaru
                         <div className="d-block my-3">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                                    value="option1" />
-                                <label className="form-check-label" for="inlineRadio1">1</label>
+                                <Radio className="form-check form-check-inline" value="1" />
+                                <label className="form-check-label">1</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
-                                    value="option2" />
-                                <label className="form-check-label" for="inlineRadio2">2</label>
+                                <Radio className="form-check form-check-inline" value="2" />
+                                <label className="form-check-label">2</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
-                                    value="option3" />
-                                <label className="form-check-label" for="inlineRadio3">3</label>
+                                <Radio className="form-check form-check-inline" value="3" />
+                                <label className="form-check-label">3</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4"
-                                    value="option4" />
-                                <label className="form-check-label" for="inlineRadio4">4</label>
+                                <Radio className="form-check form-check-inline" value="4" />
+                                <label className="form-check-label">4</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5"
-                                    value="option5" />
-                                <label className="form-check-label" for="inlineRadio5">5</label>
+                                <Radio className="form-check form-check-inline" value="5" />
+                                <label className="form-check-label">5</label>
                             </div>
                         </div>
-                        <hr className="mb-4" />
-                        <button className="btn btn-primary btn-lg btn-block" type="submit">Dodaj</button>
-                    </div>
+                    </RadioGroup>
+                    <img src={logo} alt="Product"/>
+                    <hr className="mb-4" />
+                    <button className="btn btn-primary btn-lg btn-block" type="submit">Dodaj</button>
                 </form>
             </div>
         </div>
