@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import InputRegular from './inputs/InputRegular'
 import Select from 'react-select';
 import { RadioGroup, Radio } from 'react-radio-group';
@@ -8,7 +8,7 @@ import { validateProductName, validateProductCode, validateVatStake, validateNet
 import { nettoHandler, bruttoHandler } from './helpers';
 
 function ColCenter() {
-    const [selectedValue, setSelectedValue] = useState('apple');
+    const [selectedValue, setSelectedValue] = useState('1');
     const [isFirstChecboxChecked, setisFirstChecboxChecked] = useState(false);
     const [isSecondChecboxChecked, setisSecondChecboxChecked] = useState(false);
     const [isThirdChecboxChecked, setisThirdChecboxChecked] = useState(false);
@@ -18,11 +18,28 @@ function ColCenter() {
     const [vatValue, setVatValue] = useState('');
     const [bruttoValue, setBruttoValue] = useState('');
     const [itemOptionsCount, setItemOptionsCount] = useState(0);
+    const [disabledNext, setDisabledNext] = useState(true);
+
+    // VALIDATIONS
+    const [nameValid, setNameValid] = useState(false);
+    const [productIdValid, setProductIdValid] = useState(false);
+    const [nettoAmountValid, seNettoAmountValid] = useState(false);
 
     useEffect(() => {
         if((nettoValue !== '') && (vatValue !== '')) {
             setBruttoValue(bruttoHandler(nettoValue, vatValue));
         }
+        let result = true;
+
+        // Object.keys(globalValidation).forEach(function(key, index) {
+        //     console.log(globalValidation[key]);
+        //     if(globalValidation[key] === false) {
+        //        result = false; 
+        //     }
+        // });
+        // if(result === true) {
+        //     setDisabledNext(false);
+        // }
       });
 
     const colourOptions = [
@@ -36,14 +53,14 @@ function ColCenter() {
             <div className="col-md-8 order-md-1">
                 <h4 className="mb-3">Dodaj produkt</h4>
                 <form className="needs-validation" noValidate>
-                    <InputRegular label={'Nazwa produktu'} defaultValue={'masło margaryna'} invalidMessage={'tylko litery, max długość 10 znaków, pole obowiązkowe'} validator={validateProductName} onBlur={(event => { console.log(event) })} />
-                    <InputRegular label={'Kod towaru'} invalidMessage={'format XX-XX cyfry i litery (bez znaków specjalnych), pole obowiązkowe'} validator={validateProductCode} onBlur={(event => { console.log('Kod towaru', event) })} />
+                    <InputRegular label={'Nazwa produktu'} defaultValue={'masło'} invalidMessage={'tylko litery, max długość 10 znaków, pole obowiązkowe'} validator={validateProductName} setGlobalValid={setNameValid} onBlur={() => {}} />
+                    <InputRegular label={'Kod towaru'} invalidMessage={'format XX-XX cyfry i litery (bez znaków specjalnych), pole obowiązkowe'} validator={validateProductCode} onBlur={() => {}} />
                     <InputRegular label={'Cena netto'} value={nettoValue} invalidMessage={'Niepoprawna wartość'} validator={validateNettoPrice} onChange={(event) => {setNettoValue(event.target.value)}} onBlur={(event => nettoHandler(event.target.value, setNettoValue))} />
                     <InputRegular label={'Stawka VAT'} defaultValue={23} invalidMessage={'tylko cyfry, pole obowiązkowe'} validator={validateVatStake} onBlur={(event => {setVatValue(event.target.value)})} />
                     <InputRegular label={'Cena brutto'} disabled={true} value={bruttoValue} />
                     
                     <div className="mb-3">
-                        <label for="kategoriaTowar">Kategoria towaru</label>
+                        <label htmlFor="kategoriaTowar">Kategoria towaru</label>
                         <Select
                             className="mb-3"
                             classNamePrefix="select"
@@ -62,7 +79,9 @@ function ColCenter() {
                         <CheckBox id={4} value={"Czwarta opcja towaru."} isChecked={isFourthChecboxChecked} handleCheckChieldElement={() => {setItemOptionsCount(isFourthChecboxChecked ? itemOptionsCount - 1 : itemOptionsCount + 1); setisFourthChecboxChecked(!isFourthChecboxChecked)}} />
                         <CheckBox id={5} value={"Piata opcja towaru."} isChecked={isFifthChecboxChecked} handleCheckChieldElement={() => {setItemOptionsCount(isFifthChecboxChecked ? itemOptionsCount - 1 : itemOptionsCount + 1); setisFifthChecboxChecked(!isFifthChecboxChecked)}}/>
                     </ul>
-                    {<div>Invalid</div>}
+                    {itemOptionsCount < 2 &&
+                        <div>checkbox z 5 opcjami do zaznaczenia, 2 muszą być wybrane, </div>
+                    }
             
 
                     <RadioGroup className="mb-3" name="fruit" selectedValue={selectedValue} onChange={(value , event) => {console.log('Radio', value, event); setSelectedValue(value)}}>
@@ -92,7 +111,7 @@ function ColCenter() {
                     </RadioGroup>
                     <img src={logo} alt="Product"/>
                     <hr className="mb-4" />
-                    <button className="btn btn-primary btn-lg btn-block" type="submit">Dodaj</button>
+                    <button disabled={disabledNext} className="btn btn-primary btn-lg btn-block" type="submit">Dodaj</button>
                 </form>
             </div>
         </div>

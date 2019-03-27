@@ -1,9 +1,11 @@
 import { itemNameRegex, itemCodeRegex, itemNettoPriceRegex, numbersOnly } from '../../../configuration/config';
 
-export function validateProductName(inputValue) {
+export function validateProductName(inputValue, setGlobalValid) {
     if(inputValue.match(itemNameRegex) === null) {
+        setGlobalValid(false);
         return false;
     } else {
+        setGlobalValid(true);
         return true;
     }
 };
