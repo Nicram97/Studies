@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 
-function InputRegular({ label, defaultValue, onBlur, validator, invalidMessage }) {
+function InputRegular({ label, defaultValue, value, onChange, onBlur, validator, invalidMessage, disabled }) {
     const [isValid, setIsValid] = useState(true);
     const onValid = validator ? validator : null;
 
     return (
         <div className="mb-3">
             <label htmlFor={label}>{label}</label>
-            <input type="text" className="form-control" id={label} defaultValue={defaultValue} onBlur={(event) => { 
+            <input disabled={disabled} type="text" className="form-control" id={label} value={value} defaultValue={defaultValue} onChange={onChange} onBlur={(event) => { 
                     if (onValid !== null) {
                         let validationResult = onValid(event.target.value); 
-                        console.log('VALID', validationResult);
                         if(!validationResult) {
                             setIsValid(false)
                         } else {
@@ -19,7 +18,6 @@ function InputRegular({ label, defaultValue, onBlur, validator, invalidMessage }
                     }
                     onBlur(event) 
                 }} />
-            {console.log(!isValid)}
             {!isValid &&
                 <div>
                     {invalidMessage}

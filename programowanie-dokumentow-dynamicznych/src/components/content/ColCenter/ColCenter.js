@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InputRegular from './inputs/InputRegular'
 import Select from 'react-select';
 import { RadioGroup, Radio } from 'react-radio-group';
 import CheckBox from './CheckboxList/Checkbox';
 import logo from '../../../assets/favicon.ico'
-import { validateProductName, validateProductCode } from './validators';
+import { validateProductName, validateProductCode, validateVatStake, validateNettoPrice } from './validators';
+import { nettoHandler, bruttoHandler } from './helpers';
 
 function ColCenter() {
     const [selectedValue, setSelectedValue] = useState('apple');
@@ -13,6 +14,15 @@ function ColCenter() {
     const [isThirdChecboxChecked, setisThirdChecboxChecked] = useState(false);
     const [isFourthChecboxChecked, setisFourthChecboxChecked] = useState(false);
     const [isFifthChecboxChecked, setisFifthChecboxChecked] = useState(false);
+    const [nettoValue, setNettoValue] = useState('');
+    const [vatValue, setVatValue] = useState('');
+    const [bruttoValue, setBruttoValue] = useState('');
+
+    useEffect(() => {
+        if((nettoValue !== '') && (vatValue !== '')) {
+            setBruttoValue(bruttoHandler(nettoValue, vatValue));
+        }
+      });
 
     const colourOptions = [
         { value: 'Narzędzia', label: 'Narzędzia' },
@@ -27,9 +37,9 @@ function ColCenter() {
                 <form className="needs-validation" noValidate>
                     <InputRegular label={'Nazwa produktu'} defaultValue={'masło margaryna'} invalidMessage={'tylko litery, max długość 10 znaków, pole obowiązkowe'} validator={validateProductName} onBlur={(event => { console.log(event) })} />
                     <InputRegular label={'Kod towaru'} invalidMessage={'format XX-XX cyfry i litery (bez znaków specjalnych), pole obowiązkowe'} validator={validateProductCode} onBlur={(event => { console.log('Kod towaru', event) })} />
-                    <InputRegular label={'Cena netto'} onBlur={(event => { console.log('Cena netto', event) })} />
-                    <InputRegular label={'Stawka VAT'} defaultValue={'jest za duża :('} onBlur={(event => { console.log('Stawka VAT', event) })} />
-                    <InputRegular label={'Cena brutto'} onBlur={(event => { console.log('Cena brutto', event) })} />
+                    <InputRegular label={'Cena netto'} value={nettoValue} invalidMessage={'Niepoprawna wartość'} validator={validateNettoPrice} onChange={(event) => {setNettoValue(event.target.value)}} onBlur={(event => nettoHandler(event.target.value, setNettoValue))} />
+                    <InputRegular label={'Stawka VAT'} defaultValue={23} invalidMessage={'tylko cyfry, pole obowiązkowe'} validator={validateVatStake} onBlur={(event => {setVatValue(event.target.value)})} />
+                    <InputRegular label={'Cena brutto'} disabled={true} value={bruttoValue} />
                     
                     <div className="mb-3">
                         <label for="kategoriaTowar">Kategoria towaru</label>
