@@ -1,5 +1,7 @@
+import { NotificationManager } from 'react-notifications';
+
 export function nettoHandler(inputValue, setValue) {
-    if(inputValue.includes('.')) {
+    if (inputValue.includes('.')) {
         setValue(inputValue)
     } else {
         const result = `${inputValue}.00`
