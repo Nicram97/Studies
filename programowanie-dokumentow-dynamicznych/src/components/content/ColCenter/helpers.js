@@ -1,6 +1,5 @@
 export function nettoHandler(inputValue, setValue) {
     if(inputValue.includes('.')) {
-        console.log('AAAAAA')
         setValue(inputValue)
     } else {
         const result = `${inputValue}.00`

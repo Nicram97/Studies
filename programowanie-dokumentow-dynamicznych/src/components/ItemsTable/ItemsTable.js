@@ -12,7 +12,7 @@ export const ItemsTable = ({items}) => {
             <div className="divTableHead">Stawka VAT</div>
             <div className="divTableHead">Cena brutto</div>
             <div className="divTableHead">Kategoria towaru</div>
-            <div className="divTableHead">Kategoria towaru</div>
+            <div className="divTableHead">Opcja towaru</div>
             <div className="divTableHead">Ocena towaru</div>
             <div className="divTableHead">Zdjęcie</div>
         </div>

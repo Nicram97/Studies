@@ -9,9 +9,18 @@ export const TableRow = ({productName, productId, nettoValue, vatValue, bruttoVa
         <div className="divTableCell">{vatValue}</div>
         <div className="divTableCell">{bruttoValue}</div>
         <div className="divTableCell">{category}</div>
-        <div className="divTableCell">{itemOptions}</div>
+        <div className="divTableCell">
+          <ul className="mb-3 list-nopadding">
+            {itemOptions.map((option, index) => 
+                <li key={`option_${index}`}>{option}</li>
+            )}
+            
+          </ul>
+        </div>
         <div className="divTableCell">{itemRating}</div>
-        <div className="divTableCell">{itemIcon}</div>
+        <div className="divTableCell">
+          <img src={itemIcon} alt="Product"/>
+        </div>
     </div>
   )
 }

@@ -46,30 +46,6 @@ function ColCenter() {
         }
       });
 
-    // const items = [
-    //     {
-    //         productName: 1,
-    //         productId: 2,
-    //         nettoValue: 3,
-    //         vatValue: 4,
-    //         bruttoValue: 5,
-    //         category: 6,
-    //         itemOptions: 7,
-    //         itemRating: 8,
-    //         itemIcon: 9,
-    //     },
-    //     {
-    //         productName: 1,
-    //         productId: 2,
-    //         nettoValue: 3,
-    //         vatValue: 4,
-    //         bruttoValue: 5,
-    //         category: 6,
-    //         itemOptions: 7,
-    //         itemRating: 8,
-    //         itemIcon: 9,
-    //     }
-    // ];
 
     return (
         <div className="col-12 col-sm-6 col-md-8">
@@ -80,7 +56,7 @@ function ColCenter() {
                     <InputRegular label={'Kod towaru'} invalidMessage={'format XX-XX cyfry i litery (bez znaków specjalnych), pole obowiązkowe'} validator={validateProductCode} setGlobalValid={setProductIdValid} onBlur={(event) => setProductId(event.target.value)} />
                     <InputRegular label={'Cena netto'} value={nettoValue} invalidMessage={'Niepoprawna wartość'} validator={validateNettoPrice} setGlobalValid={seNettoAmountValid} onChange={(event) => {setNettoValue(event.target.value)}} onBlur={(event => nettoHandler(event.target.value, setNettoValue))} />
                     <InputRegular label={'Stawka VAT'} defaultValue={vatValue} invalidMessage={'tylko cyfry, pole obowiązkowe'} validator={validateVatStake} onBlur={(event => {setVatValue(event.target.value)})} />
-                    <InputRegular label={'Cena brutto'} disabled={true} value={bruttoValue} />
+                    <InputRegular label={'Cena brutto'} disabled={true} value={bruttoValue} validator={() => { return true }}/>
                     
                     <div className="mb-3">
                         <label htmlFor="kategoriaTowar">Kategoria towaru</label>
@@ -94,7 +70,7 @@ function ColCenter() {
                             options={colourOptions}
                         />
                     </div>
-                        <div className = "mb-3">Opcja towaru</div>
+                    <div className = "mb-3">Opcja towaru</div>
                     <ul className="mb-3 list-nopadding">
                         <CheckBox id={1} value={"Pierwsza opcja towaru."} isChecked={isFirstChecboxChecked} handleCheckChieldElement={() => {setItemOptionsCount(isFirstChecboxChecked ? itemOptionsCount - 1 : itemOptionsCount + 1); setisFirstChecboxChecked(!isFirstChecboxChecked)}}/>
                         <CheckBox id={2} value={"Druga opcja towaru."} isChecked={isSecondChecboxChecked} handleCheckChieldElement={() => {setItemOptionsCount(isSecondChecboxChecked ? itemOptionsCount - 1 : itemOptionsCount + 1); setisSecondChecboxChecked(!isSecondChecboxChecked)}}/>
@@ -103,9 +79,8 @@ function ColCenter() {
                         <CheckBox id={5} value={"Piata opcja towaru."} isChecked={isFifthChecboxChecked} handleCheckChieldElement={() => {setItemOptionsCount(isFifthChecboxChecked ? itemOptionsCount - 1 : itemOptionsCount + 1); setisFifthChecboxChecked(!isFifthChecboxChecked)}}/>
                     </ul>
                     {itemOptionsCount < 2 &&
-                        <div>checkbox z 5 opcjami do zaznaczenia, 2 muszą być wybrane, </div>
+                        <div className="invalid-feedback" style={{display: "block"}}>checkbox z 5 opcjami do zaznaczenia, 2 muszą być wybrane, </div>
                     }
-            
 
                     <RadioGroup className="mb-3" name="fruit" selectedValue={radioValue} onChange={(value , event) => {console.log('Radio', value); setRadioValue(value)}}>
                         Ocena towaru
@@ -144,16 +119,22 @@ function ColCenter() {
                             vatValue: vatValue,
                             bruttoValue: bruttoValue,
                             category: category,
-                            itemOptions: itemOptionsCount,
+                            itemOptions: [
+                                (isFirstChecboxChecked ? 'Pierwszy' : undefined), 
+                                (isSecondChecboxChecked ? 'Drugi' : undefined), 
+                                (isThirdChecboxChecked ? 'Trzeci' : undefined), 
+                                (isFourthChecboxChecked ? 'Czwarty' : undefined), 
+                                (isFifthChecboxChecked ? 'Piąty' : undefined)
+                            ],
                             itemRating: radioValue,
-                            itemIcon: 1,
+                            itemIcon: logo,
                         };
                         const newItems = tableItems.concat([newItem]);
                         setTableItems(newItems);
                     }}>Dodaj</button>
                 </form>
             </div>
-            <ItemsTable items={tableItems}/>
+            <ItemsTable items={tableItems} />
         </div>
     );
 }
