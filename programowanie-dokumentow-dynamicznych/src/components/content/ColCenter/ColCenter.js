@@ -142,7 +142,7 @@ function ColCenter() {
                         }}}>Dodaj</button>
                 </form>
             </div>
-            <ItemsTable items={tableItems} />
+            <ItemsTable items={tableItems} changeItemsOrder={setTableItems} />
         </div>
     );
 }
