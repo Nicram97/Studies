@@ -6,7 +6,7 @@ import CheckBox from './CheckboxList/Checkbox';
 import logo from '../../../assets/favicon.ico'
 import ItemsTable from '../../ItemsTable/ItemsTable';
 import { validateProductName, validateProductCode, validateVatStake, validateNettoPrice } from './validators';
-import { nettoHandler, bruttoHandler, createNotification } from './helpers';
+import { nettoHandler, bruttoHandler, arrayContains } from './helpers';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,8 +19,8 @@ function ColCenter() {
     ];
 
     const [radioValue, setRadioValue] = useState('1');
-    const [category, setCategory] = useState(colourOptions[0]);
-    const [productName, setProductName] = useState('');
+    const [category, setCategory] = useState(colourOptions[0].value);
+    const [productName, setProductName] = useState('masło');
     const [productId, setProductId] = useState('');
     const [isFirstChecboxChecked, setisFirstChecboxChecked] = useState(false);
     const [isSecondChecboxChecked, setisSecondChecboxChecked] = useState(false);
@@ -33,6 +33,9 @@ function ColCenter() {
     const [itemOptionsCount, setItemOptionsCount] = useState(0);
     const [disabledNext, setDisabledNext] = useState(true);
     const [tableItems, setTableItems] = useState([]);
+    const [inEditMode, setInEditMode] = useState(null);
+    const [editedItem, setEditedItem] = useState(null);
+    const [unlockEdit, setUnlockEdit] = useState(false);
 
     // VALIDATIONS
     const [nameValid, setNameValid] = useState(false);
@@ -47,8 +50,40 @@ function ColCenter() {
         if ((nameValid && productIdValid && nettoAmountValid && itemOptionsCount >= 2)) {
             setDisabledNext(false);
         }
-    });
 
+        if (inEditMode) {
+            const item = tableItems.find(product => product.productName === inEditMode && product);
+            if (unlockEdit) {
+                // inputs
+                setProductName(item.productName)
+                setProductId(item.productId)
+                setNettoValue(item.nettoValue)
+                setVatValue(item.vatValue)
+            }
+            setUnlockEdit(false);
+            setProductIdValid(true);
+            setEditedItem(item);
+            // There be dragons
+            setCategory(item.category);
+            // Checking item options :( forgive me )
+            if (arrayContains('Pierwszy', item.itemOptions)) {
+                setisFirstChecboxChecked(true);
+            }
+            if (arrayContains('Drugi', item.itemOptions)) {
+                setisSecondChecboxChecked(true);
+            }
+            if (arrayContains('Trzeci', item.itemOptions)) {
+                setisThirdChecboxChecked(true);
+            }
+            if (arrayContains('Czwarty', item.itemOptions)) {
+                setisFourthChecboxChecked(true);
+            }
+            if (arrayContains('Piąty', item.itemOptions)) {
+                setisFifthChecboxChecked(true);
+            }
+            setRadioValue(item.itemRating)
+        }
+    });
 
     return (
         <div className="col-12 col-sm-6 col-md-8">
@@ -56,10 +91,10 @@ function ColCenter() {
             <div className="col-md-8 order-md-1">
                 <h4 className="mb-3">Dodaj produkt</h4>
                 <form className="needs-validation" noValidate >
-                    <InputRegular label={'Nazwa produktu'} defaultValue={'masło'} invalidMessage={'tylko litery, max długość 10 znaków, pole obowiązkowe'} validator={validateProductName} setGlobalValid={setNameValid} onBlur={(event) => setProductName(event.target.value)} />
-                    <InputRegular label={'Kod towaru'} invalidMessage={'format XX-XX cyfry i litery (bez znaków specjalnych), pole obowiązkowe'} validator={validateProductCode} setGlobalValid={setProductIdValid} onBlur={(event) => setProductId(event.target.value)} />
-                    <InputRegular label={'Cena netto'} value={nettoValue} invalidMessage={'Niepoprawna wartość'} validator={validateNettoPrice} setGlobalValid={seNettoAmountValid} onChange={(event) => { setNettoValue(event.target.value) }} onBlur={(event => nettoHandler(event.target.value, setNettoValue))} />
-                    <InputRegular label={'Stawka VAT'} defaultValue={vatValue} invalidMessage={'tylko cyfry, pole obowiązkowe'} validator={validateVatStake} onBlur={(event => { setVatValue(event.target.value) })} />
+                    <InputRegular label={'Nazwa produktu'} value={productName} invalidMessage={'tylko litery, max długość 10 znaków, pole obowiązkowe'} validator={validateProductName} setGlobalValid={setNameValid} onChange={(event) => setProductName(event.target.value)} />
+                    <InputRegular label={'Kod towaru'} disabled={inEditMode} value={productId} invalidMessage={'format XX-XX cyfry i litery (bez znaków specjalnych), pole obowiązkowe'} validator={validateProductCode} setGlobalValid={setProductIdValid} onChange={(event) => setProductId(event.target.value)} />
+                    <InputRegular label={'Cena netto'} value={nettoValue} invalidMessage={'Niepoprawna wartość'} validator={validateNettoPrice} setGlobalValid={seNettoAmountValid} onChange={(event => nettoHandler(event.target.value, setNettoValue))} />
+                    <InputRegular label={'Stawka VAT'} value={vatValue} invalidMessage={'tylko cyfry, pole obowiązkowe'} validator={validateVatStake} onChange={(event => { setVatValue(event.target.value) })} />
                     <InputRegular label={'Cena brutto'} disabled={true} value={bruttoValue} validator={() => { return true }} />
 
                     <div className="mb-3">
@@ -67,10 +102,11 @@ function ColCenter() {
                         <Select
                             className="mb-3"
                             classNamePrefix="select"
-                            defaultValue={colourOptions[0]}
+                            value={colourOptions.find(cat => cat.value === category && cat)}
+                            defaultValue={colourOptions.find(cat => cat.value === category && cat)}
                             isClearable={false}
                             name="color"
-                            onChange={(event => { console.log('SELECT', event); setCategory(event.value) })}
+                            onChange={(event => setCategory(event.value))}
                             options={colourOptions}
                         />
                     </div>
@@ -85,8 +121,7 @@ function ColCenter() {
                     {itemOptionsCount < 2 &&
                         <div className="invalid-feedback" style={{ display: "block" }}>checkbox z 5 opcjami do zaznaczenia, 2 muszą być wybrane, </div>
                     }
-
-                    <RadioGroup className="mb-3" name="fruit" selectedValue={radioValue} onChange={(value, event) => { console.log('Radio', value); setRadioValue(value) }}>
+                    <RadioGroup className="mb-3" name="fruit" selectedValue={radioValue} onChange={(value, event) => setRadioValue(value)}>
                         Ocena towaru
                         <div className="d-block my-3">
                             <div className="form-check form-check-inline">
@@ -116,10 +151,6 @@ function ColCenter() {
                     <button disabled={disabledNext} className="btn btn-primary btn-lg btn-block" type="submit"
                         onClick={(event) => {
                             event.preventDefault()
-                            const isItemFound = tableItems.find((element) => { console.log('element!', element); return element.productName === productName; })
-                            if (isItemFound) {
-                                notify();
-                            } else {
                             const newItem = {
                                 productName: productName,
                                 productId: productId,
@@ -137,12 +168,23 @@ function ColCenter() {
                                 itemRating: radioValue,
                                 itemIcon: logo,
                             };
-                            const newItems = tableItems.concat([newItem]);
-                            setTableItems(newItems);
-                        }}}>Dodaj</button>
+                            if (inEditMode) {
+                                const changedItems = tableItems.map(item => item.productName === editedItem.productName ? newItem : item);
+                                setTableItems(changedItems);
+                                setInEditMode(null);
+                            } else {
+                                const isItemFound = tableItems.find((element) => element.productName === productName)
+                                if (isItemFound) {
+                                    notify();
+                                } else {
+                                    const newItems = tableItems.concat([newItem]);
+                                    setTableItems(newItems);
+                                }
+                            }
+                        }}>{inEditMode ? 'Zapisz': 'Dodaj'}</button>
                 </form>
             </div>
-            <ItemsTable items={tableItems} changeItemsOrder={setTableItems} />
+            <ItemsTable items={tableItems} changeItemsOrder={setTableItems} setInEditMode={setInEditMode} setUnlockEdit={setUnlockEdit} />
         </div>
     );
 }
