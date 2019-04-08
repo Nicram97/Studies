@@ -207,7 +207,7 @@ function ColCenter() {
                     </form>
                 </div>
                 {cardsView ? 
-                    <CardsView products={context.products}/>
+                    <CardsView products={context.products} changeItemsOrder={(array) => { context.changeProductsList(array) }} setInEditMode={setInEditMode} setUnlockEdit={setUnlockEdit}/>
                     :
                     <ItemsTable items={context.products} changeItemsOrder={(array) => { context.changeProductsList(array) }} setInEditMode={setInEditMode} setUnlockEdit={setUnlockEdit} />
                 }

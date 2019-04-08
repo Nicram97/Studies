@@ -3,7 +3,7 @@ import { Card, Dropdown } from 'react-bootstrap';
 import logo from '../../assets/favicon.ico'
 import './CardsView.css'
 
-export const CardsView = ({ products }) => {
+export const CardsView = ({ products, setInEditMode, changeItemsOrder, setUnlockEdit }) => {
     return (
         <div className="parent">
             {products.map((product, index) =>
@@ -11,7 +11,6 @@ export const CardsView = ({ products }) => {
                     <Card.Img variant="top" src={logo} />
                     <Card.Body>
                         <Card.Title>{product.productName}</Card.Title>
-                        {console.log(product)}
                         <Card.Text>
                             Netto: {product.nettoValue}
                             <br/>
@@ -23,11 +22,11 @@ export const CardsView = ({ products }) => {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                {/* <Dropdown.Item href="#/action-1" onClick={() => { setInEditMode(productName); setUnlockEdit(true) }}>Edytuj</Dropdown.Item>
+                                <Dropdown.Item href="#/action-1" onClick={() => { setInEditMode(product.productName); setUnlockEdit(true) }}>Edytuj</Dropdown.Item>
                                 <Dropdown.Item href="#/action-2" onClick={() => {
-                                    const newItemsTable = products.filter(item => item.productName !== productName && item)
-                                    changeItemsTable(newItemsTable);
-                                }}>Usuń</Dropdown.Item> */}
+                                    const newItemsTable = products.filter(item => item.productName !== product.productName && item)
+                                    changeItemsOrder(newItemsTable);
+                                }}>Usuń</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </Card.Body>
