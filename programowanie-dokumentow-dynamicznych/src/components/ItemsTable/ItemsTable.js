@@ -7,7 +7,7 @@ export const ItemsTable = ({ items, changeItemsOrder, setInEditMode, setUnlockEd
   const [productAttributeAsc, setProductAttributeAsc] = useState(true);
 
   return (
-    <div className="divTable" >
+    <div className="divTable" style={{ 'z-index': "10" }}>
       <div className="divTableHeading">
         <div className="divTableHead" style={{ cursor: "pointer" }} onClick={() => {
           setProductAttributeAsc(!productAttributeAsc);
