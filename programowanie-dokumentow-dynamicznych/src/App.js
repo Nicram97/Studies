@@ -10,6 +10,11 @@ import ItemsContext from './context/itemsList';
 Modal.setAppElement('#root')
 
 class App extends React.Component {
+  constructor (props) {
+    super(props);
+    this.upload = React.createRef();
+    this.onChangeFile = this.onChangeFile.bind(this);
+  }
   state = {
     products: [],
     cart: []
@@ -41,10 +46,27 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    const savedCart = JSON.parse(localStorage.getItem('products'));
-    if (savedCart) {
+    const savedProducts = JSON.parse(localStorage.getItem('products'));
+    if (savedProducts) {
       this.changeProductsList(JSON.parse(localStorage.getItem('products')))
     }
+  }
+
+  onChangeFile(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    event.persist()
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    const setFromFile = this.changeProductsList;
+
+    reader.onload = function(e) {
+      const text = reader.result;
+      const productsFromFile = JSON.parse(text);
+      setFromFile(productsFromFile);
+      event.target.value = null;
+    }
+    reader.readAsText(file);
   }
 
   render() {
@@ -56,7 +78,13 @@ class App extends React.Component {
         cartBuy: this.cartBuy,
         enterCart: this.enterCart,
       }}>
-        <Navbar />
+        <input id="myInput"
+          type="file"
+          ref={(ref) => this.upload = ref}
+          style={{display: 'none'}}
+          onChange={this.onChangeFile.bind(this)}
+        />
+        <Navbar upload={this.upload}/>
         <Content />
         <Footer />
       </ItemsContext.Provider>
@@ -65,3 +93,17 @@ class App extends React.Component {
 }
 
 export default App;
+
+function preventRecursiveEventHandler(eventHandler) {
+  let recursive = false;
+
+  return (...args) => {
+      if (!recursive) {
+          recursive = true;
+
+          eventHandler.apply(this, args);
+
+          recursive = false;
+      }
+  };
+}

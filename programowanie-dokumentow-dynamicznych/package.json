@@ -6,6 +6,7 @@
     "font-awesome": "^4.7.0",
     "react": "^16.8.5",
     "react-bootstrap": "^1.0.0-beta.6",
+    "react-butterfiles": "^1.2.1",
     "react-dom": "^16.8.5",
     "react-modal": "^3.8.1",
     "react-notifications": "^1.4.3",

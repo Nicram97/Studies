@@ -4,8 +4,8 @@ import ItemsContext from '../../context/itemsList';
 import { RadioGroup, Radio } from 'react-radio-group';
 
 class Nvbar extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             modalIsOpen: false,
@@ -47,8 +47,8 @@ class Nvbar extends React.Component {
                                     <li className="nav-item">
                                         <a className="nav-link" href="http://lcieszynski.zut.edu.pl/fileadmin/DPD/instrukcja_2019.pdf">Instrukcja</a>
                                     </li>
-                                    <li className="nav-item">
-                                        <a className="nav-link disabled" href="#" tabIndex="-1" aria-disabled="true">Disabled</a>
+                                    <li className="nav-item" style={{ cursor: "pointer" }}>
+                                        <a className="nav-link" tabIndex="-1" onClick={() => this.props.upload.click()}>Wczytaj z pliku</a>
                                     </li>
                                 </ul>
                                 <button type="button" className="btn btn-primary" onClick={() => {
