@@ -57,16 +57,7 @@ function ColCenter() {
     }, [])
 
     useEffect(() => {
-        if ((nettoValue !== '') && (vatValue !== '')) {
-            setBruttoValue(bruttoHandler(nettoValue, vatValue));
-        }
-
-        if ((nameValid && productIdValid && nettoAmountValid && itemOptionsCount >= 2)) {
-            setDisabledNext(false);
-        }
-
         if (inEditMode) {
-            //NEED TO FIX THIS item type === undefined!! and from local storage delete only shoping cart items not all of them
             const item = context1.products.find(product => product.productName === inEditMode && product);
             setDisabledNext(false);
             if (unlockEdit) {
@@ -99,6 +90,16 @@ function ColCenter() {
                 setisFifthChecboxChecked(true);
             }
             setRadioValue(item.itemRating)
+        }
+    }, [inEditMode])
+
+    useEffect(() => {
+        if ((nettoValue !== '') && (vatValue !== '')) {
+            setBruttoValue(bruttoHandler(nettoValue, vatValue));
+        }
+
+        if ((nameValid && productIdValid && nettoAmountValid && itemOptionsCount >= 2)) {
+            setDisabledNext(false);
         }
     });
 
