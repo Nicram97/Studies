@@ -51,7 +51,10 @@ class Nvbar extends React.Component {
                                         <a className="nav-link disabled" href="#" tabIndex="-1" aria-disabled="true">Disabled</a>
                                     </li>
                                 </ul>
-                                <button type="button" className="btn btn-primary" onClick={this.openModal}>
+                                <button type="button" className="btn btn-primary" onClick={() => {
+                                        context.enterCart(context.products)
+                                        this.openModal()
+                                    }}>
                                     Koszyk
                             </button>
                             </div>
@@ -71,13 +74,13 @@ class Nvbar extends React.Component {
                                     <div className="divTableHead">Ilość sztuk</div>
                                 </div>
                                 <div className="divTableBody">
-                                    {context.products.map((item, index) =>
+                                    {context.cart.map((item, index) =>
                                         <div className="divTableRow" key={index}>
                                             <div className="divTableCell">{item.productName}</div>
                                             <div className="divTableCell">{item.bruttoValue}</div>
                                             <div className="divTableCell">
                                                 <input defaultValue={item.quantity} onBlur={(event) => {
-                                                        const siema = context.products.map(prod => {
+                                                        const siema = context.cart.map(prod => {
                                                             if (prod.productName === item.productName) {
                                                                 prod.quantity = event.target.value
                                                                 prod.bruttoValue = prod.bruttoValue * event.target.value

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import InputRegular from './inputs/InputRegular'
 import Select from 'react-select';
 import { RadioGroup, Radio } from 'react-radio-group';
@@ -33,7 +33,6 @@ function ColCenter() {
     const [bruttoValue, setBruttoValue] = useState('');
     const [itemOptionsCount, setItemOptionsCount] = useState(0);
     const [disabledNext, setDisabledNext] = useState(true);
-    const [tableItems, setTableItems] = useState([]);
     const [inEditMode, setInEditMode] = useState(null);
     const [editedItem, setEditedItem] = useState(null);
     const [unlockEdit, setUnlockEdit] = useState(false);
@@ -42,6 +41,18 @@ function ColCenter() {
     const [nameValid, setNameValid] = useState(false);
     const [productIdValid, setProductIdValid] = useState(false);
     const [nettoAmountValid, seNettoAmountValid] = useState(false);
+
+    // context
+    const context1 = useContext(ItemsContext);
+
+    // saved items
+    const savedState = localStorage.getItem('products');
+
+    useEffect(() => {
+        if(savedState) {
+            context1.changeProductsList(JSON.parse(savedState));
+        }
+    }, [])
 
     useEffect(() => {
         if ((nettoValue !== '') && (vatValue !== '')) {
@@ -53,7 +64,9 @@ function ColCenter() {
         }
 
         if (inEditMode) {
-            const item = tableItems.find(product => product.productName === inEditMode && product);
+            //NEED TO FIX THIS item type === undefined!! and from local storage delete only shoping cart items not all of them
+            const item = context1.products.find(product => product.productName === inEditMode && product);
+            setDisabledNext(false);
             if (unlockEdit) {
                 // inputs
                 setProductName(item.productName)
@@ -63,6 +76,7 @@ function ColCenter() {
             }
             setUnlockEdit(false);
             setProductIdValid(true);
+            setProductName(item.productName);
             setEditedItem(item);
             // There be dragons
             setCategory(item.category);

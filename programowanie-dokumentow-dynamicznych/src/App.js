@@ -17,25 +17,33 @@ class App extends React.Component {
 
   changeProductsList = products => {
     this.setState((state, props) => {
-      return {products: products};
+      return {products: products, cart: products};
     }, () => {
       // Put the object into storage
-      localStorage.setItem('testCart', JSON.stringify(this.state));
+      localStorage.setItem('products', JSON.stringify(this.state.products));
     })
   };
 
+  enterCart = (products) => {
+    this.setState((state, props) => {
+      return { cart: products };
+    }, () => {
+      localStorage.setItem('cart', JSON.stringify(this.state.cart));
+    })
+  }
+
   cartBuy = () => {
     this.setState((state, props) => {
-      return { products: [], cart: [] };
+      return { cart: [] };
     }, () => {
-      localStorage.removeItem('testCart');
+      localStorage.removeItem('cart');
     })
   }
 
   componentDidMount() {
-    const savedCart = JSON.parse(localStorage.getItem('testCart'));
+    const savedCart = JSON.parse(localStorage.getItem('products'));
     if (savedCart) {
-      this.changeProductsList(JSON.parse(localStorage.getItem('testCart')).products)
+      this.changeProductsList(JSON.parse(localStorage.getItem('products')))
     }
   }
 
@@ -43,8 +51,10 @@ class App extends React.Component {
     return (
       <ItemsContext.Provider value={{
         products: this.state.products,
+        cart: this.state.cart,
         changeProductsList: this.changeProductsList,
         cartBuy: this.cartBuy,
+        enterCart: this.enterCart,
       }}>
         <Navbar />
         <Content />
