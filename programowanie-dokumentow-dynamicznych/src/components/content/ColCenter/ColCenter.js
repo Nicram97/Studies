@@ -10,6 +10,7 @@ import { nettoHandler, bruttoHandler, arrayContains } from './helpers';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ItemsContext from '../../../context/itemsList';
+import CardsView from '../../CardsView/CardsView';
 
 function ColCenter() {
     const notify = () => toast.error("Item present in list!");
@@ -36,6 +37,7 @@ function ColCenter() {
     const [inEditMode, setInEditMode] = useState(null);
     const [editedItem, setEditedItem] = useState(null);
     const [unlockEdit, setUnlockEdit] = useState(false);
+    const [cardsView, setCardsView] = useState(false);
 
     // VALIDATIONS
     const [nameValid, setNameValid] = useState(false);
@@ -200,9 +202,15 @@ function ColCenter() {
                                     }
                                 }
                             }}>{inEditMode ? 'Zapisz': 'Dodaj'}</button>
+                            <button className="btn btn-primary btn-lg btn-block" 
+                            onClick={() => setCardsView(!cardsView)}>Przełącz widok</button>
                     </form>
                 </div>
-                <ItemsTable items={context.products} changeItemsOrder={(array) => { context.changeProductsList(array) }} setInEditMode={setInEditMode} setUnlockEdit={setUnlockEdit} />
+                {cardsView ? 
+                    <CardsView products={context.products}/>
+                    :
+                    <ItemsTable items={context.products} changeItemsOrder={(array) => { context.changeProductsList(array) }} setInEditMode={setInEditMode} setUnlockEdit={setUnlockEdit} />
+                }
             </div>
             )}
         </ItemsContext.Consumer>
